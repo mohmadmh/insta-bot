@@ -1,14 +1,14 @@
-import random
-import string
+import json
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 TOKEN = "1927821341:AAHh5iQT3dNw1AoI-z-HxDHcULOuLLwuUM4"
 
+# إعداد التطبيق
 app = Application.builder().token(TOKEN).build()
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("✅ البوت يعمل بنجاح! أرسل يوزر لتجربة التخمين.")
+    await update.message.reply_text("✅ تم الاتصال بنجاح! البوت الآن جاهز للعمل.")
 
 app.add_handler(CommandHandler("start", start))
 
@@ -16,9 +16,9 @@ async def handler(request):
     if request.method == "POST":
         try:
             await app.initialize()
-            import json
             data = await request.json()
-            await app.process_update(Update.de_json(data, app.bot))
+            update = Update.de_json(data, app.bot)
+            await app.process_update(update)
         except Exception as e:
             print(f"Error: {e}")
     return {"statusCode": 200, "body": "OK"}
